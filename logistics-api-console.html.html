@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CargoCore C++ logistics API console" />
+  <title>CargoCore | C++ API Console</title>
+  <style>
+    :root{--navy:#102a43;--dark:#071a2b;--orange:#f97316;--bg:#f4f7fb;--card:#fff;--muted:#66788a;--border:#dbe4ee;--green:#15803d;--red:#b91c1c;--code:#0b1726;--shadow:0 12px 30px rgba(16,42,67,.08)}
+    *{box-sizing:border-box}body{margin:0;color:var(--navy);background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}
+    header{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem clamp(1rem,4vw,3rem);color:#fff;background:linear-gradient(120deg,var(--dark),var(--navy));box-shadow:0 4px 20px rgba(7,26,43,.25)}
+    .brand{display:flex;align-items:center;gap:.75rem}.mark{display:grid;place-items:center;width:42px;height:42px;color:#fff;font-weight:800;background:var(--orange);border-radius:12px}.brand h1{margin:0;font-size:1.15rem}.brand span{display:block;margin-top:.15rem;color:#b9c9d8;font-size:.75rem}.header-status{display:flex;align-items:center;gap:.55rem;color:#d8e4ef;font-size:.82rem}.status-dot{width:9px;height:9px;border-radius:50%;background:#fbbf24}.status-dot.online{background:#4ade80}
+    main{width:min(1400px,100%);margin:0 auto;padding:clamp(1rem,3vw,2.5rem)}.hero{margin-bottom:1.4rem}.hero h2{margin:0 0 .4rem;font-size:clamp(1.65rem,3vw,2.5rem)}.hero p{margin:0;color:var(--muted);max-width:780px}.layout{display:grid;grid-template-columns:280px 1fr;gap:1.15rem}.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:1.25rem}.sidebar h3{margin:0 0 1rem;font-size:1rem}.endpoint-list{display:grid;gap:.45rem}.endpoint{display:flex;align-items:center;gap:.45rem;width:100%;padding:.65rem .7rem;border:1px solid transparent;border-radius:8px;color:var(--navy);background:transparent;text-align:left;font-size:.82rem}.endpoint:hover,.endpoint.active{border-color:#fed7aa;background:#fff7ed}.method{display:inline-block;min-width:43px;padding:.2rem .3rem;border-radius:4px;color:#fff;font-size:.65rem;font-weight:800;text-align:center}.get{background:#2563eb}.post{background:#16a34a}.put{background:#ca8a04}.delete{background:#dc2626}.sidebar-note{margin-top:1.2rem;padding:.8rem;color:var(--muted);background:var(--bg);border-radius:9px;font-size:.76rem;line-height:1.5}.content{display:grid;gap:1.15rem}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}.toolbar h3{margin:0}.badge{padding:.35rem .6rem;border-radius:999px;color:#166534;background:#dcfce7;font-size:.75rem;font-weight:800}.request-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.request-grid .full{grid-column:1/-1}.field{display:grid;gap:.35rem}.field label{font-size:.8rem;font-weight:800}.field small{color:var(--muted);font-size:.72rem}.field input,.field textarea,.field select{width:100%;padding:.7rem .75rem;border:1px solid var(--border);border-radius:8px;outline:none;background:#fff;color:var(--navy)}.field textarea{min-height:125px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(249,115,22,.15)}.actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}.button{border:0;border-radius:8px;padding:.7rem 1rem;font-weight:800;transition:.2s}.button:hover{transform:translateY(-1px);filter:brightness(1.04)}.primary{color:#fff;background:var(--orange)}.secondary{color:var(--navy);background:#eef3f8}.dark{color:#fff;background:var(--navy)}.danger{color:#fff;background:var(--red)}.code-box{overflow:auto;min-height:230px;padding:1rem;color:#d7e5f3;background:var(--code);border-radius:10px;font: .8rem/1.55 "SFMono-Regular",Consolas,monospace;white-space:pre-wrap}.code-box .muted{color:#89a1b8}.two-panels{display:grid;grid-template-columns:1fr 1fr;gap:1.15rem}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:600px}th,td{padding:.75rem .6rem;border-bottom:1px solid var(--border);text-align:left;font-size:.82rem}th{color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em}.http-code{font-weight:800;color:var(--green)}.notice{display:none;padding:.8rem 1rem;border-radius:9px;font-size:.85rem}.notice.show{display:block}.notice.success{color:#14532d;background:#dcfce7}.notice.error{color:#7f1d1d;background:#fee2e2}footer{padding:2rem;color:#b9c9d8;background:var(--dark);text-align:center;font-size:.8rem}
+    @media(max-width:980px){.layout{grid-template-columns:1fr}.endpoint-list{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){header{align-items:flex-start;flex-direction:column}.request-grid,.two-panels{grid-template-columns:1fr}.request-grid .full{grid-column:auto}.endpoint-list{grid-template-columns:1fr}main{padding:1rem}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><div class="mark">CC</div><div><h1>CargoCore API Console</h1><span>Frontend for a C++ logistics backend</span></div></div>
+    <div class="header-status"><span class="status-dot" id="statusDot"></span><span id="serverStatus">Backend status: not checked</span></div>
+  </header>
+  <main>
+    <section class="hero"><h2>Logistics API Operations</h2><p>Test shipment, quote, contact, and health endpoints from one responsive interface. This browser console uses mock responses until you connect it to your C++ server.</p></section>
+    <div id="notice" class="notice"></div>
+    <section class="layout">
+      <aside class="panel sidebar">
+        <h3>API Endpoints</h3>
+        <div class="endpoint-list">
+          <button class="endpoint active" data-endpoint="health"><span class="method get">GET</span>/api/health</button>
+          <button class="endpoint" data-endpoint="track"><span class="method get">GET</span>/api/shipments/track</button>
+          <button class="endpoint" data-endpoint="shipments"><span class="method post">POST</span>/api/shipments</button>
+          <button class="endpoint" data-endpoint="status"><span class="method put">PUT</span>/api/shipments/status</button>
+          <button class="endpoint" data-endpoint="quote"><span class="method post">POST</span>/api/quotes</button>
+          <button class="endpoint" data-endpoint="contact"><span class="method post">POST</span>/api/contact</button>
+        </div>
+        <div class="sidebar-note"><strong>Production note</strong><br />Replace the demo request handler with <code>fetch()</code> calls to your C++ API. Configure CORS, HTTPS, authentication, validation, and a real database on the server.</div>
+      </aside>
+
+      <section class="content">
+        <div class="panel">
+          <div class="toolbar"><h3 id="formTitle">GET /api/health</h3><span class="badge" id="modeBadge">Demo mode</span></div>
+          <form id="apiForm" class="request-grid" style="margin-top:1rem"></form>
+        </div>
+        <div class="two-panels">
+          <div class="panel"><div class="toolbar"><h3>Request Preview</h3><button class="button secondary" id="copyRequest" type="button">Copy JSON</button></div><pre id="requestPreview" class="code-box" style="margin-bottom:0"></pre></div>
+          <div class="panel"><div class="toolbar"><h3>Response</h3><span id="responseCode" class="http-code">—</span></div><pre id="responsePreview" class="code-box" style="margin-bottom:0"></pre></div>
+        </div>
+        <div class="panel"><div class="toolbar"><h3>Recent API Activity</h3><button class="button secondary" id="clearLog" type="button">Clear Log</button></div><div class="table-wrap"><table><thead><tr><th>Time</th><th>Method</th><th>Endpoint</th><th>Status</th><th>Latency</th></tr></thead><tbody id="activityLog"></tbody></table></div></div>
+      </section>
+    </section>
+  </main>
+  <footer>CargoCore Logistics &middot; C++ API frontend prototype</footer>
+
+  <script>
+    const ENDPOINTS = {
+      health: { method:'GET', path:'/api/health', title:'Health Check', fields:[] },
+      track: { method:'GET', path:'/api/shipments/track', title:'Track Shipment', fields:[['trackingNumber','Tracking number','CC-2026-0001','text','Enter a verified tracking number.']] },
+      shipments: { method:'POST', path:'/api/shipments', title:'Create Shipment', fields:[['sender','Sender name','Northstar Foods','text'],['recipient','Recipient name','Harbor Market','text'],['origin','Origin','Chicago, USA','text'],['destination','Destination','Toronto, Canada','text'],['shippingMethod','Shipping method','Road Freight','text'],['estimatedDelivery','Estimated delivery','2026-10-20','date'],['packageDescription','Package description','Commercial shipment','text']] },
+      status: { method:'PUT', path:'/api/shipments/status', title:'Update Shipment Status', fields:[['trackingNumber','Tracking number','CC-2026-0001','text'],['status','New status','in_transit','select'],['location','Current location','Detroit Facility','text']] },
+      quote: { method:'POST', path:'/api/quotes', title:'Request Shipping Quote', fields:[['fullName','Full name','Jordan Lee','text'],['email','Email','jordan@example.com','email'],['pickup','Pickup location','Chicago, USA','text'],['delivery','Delivery destination','Toronto, Canada','text'],['weight','Package weight (kg)','25','number'],['method','Preferred method','Road Freight','text'],['instructions','Additional instructions','Handle with care','textarea']] },
+      contact: { method:'POST', path:'/api/contact', title:'Submit Contact Inquiry', fields:[['fullName','Full name','Jordan Lee','text'],['email','Email','jordan@example.com','email'],['subject','Subject','Shipment question','text'],['message','Message','Please provide an update on my shipment.','textarea']] }
+    };
+    const demoShipments = { 'CC-2026-0001': { trackingNumber:'CC-2026-0001', status:'in_transit', origin:'Chicago, USA', destination:'Toronto, Canada', currentLocation:'Detroit Facility', estimatedDelivery:'2026-10-20', lastUpdated:'2026-10-09T13:42:00Z' } };
+    let current = 'health'; let logs = JSON.parse(localStorage.getItem('cargocore_api_logs') || '[]');
+    const $ = s => document.querySelector(s);
+    const esc = value => String(value ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    function notify(message,type='success'){const n=$('#notice');n.textContent=message;n.className=`notice show ${type}`;clearTimeout(notify.timer);notify.timer=setTimeout(()=>n.className='notice',3500)}
+    function fieldMarkup(field){const [name,label,placeholder,type] = field;if(type==='textarea')return `<div class="field full"><label for="${name}">${label}</label><textarea id="${name}" name="${name}" placeholder="${placeholder}">${placeholder}</textarea></div>`;if(name==='status')return `<div class="field"><label for="${name}">${label}</label><select id="${name}" name="${name}"><option value="registered">registered</option><option value="picked_up">picked_up</option><option value="processing">processing</option><option value="in_transit" selected>in_transit</option><option value="arrived">arrived</option><option value="out_for_delivery">out_for_delivery</option><option value="delivered">delivered</option></select></div>`;return `<div class="field"><label for="${name}">${label}</label><input id="${name}" name="${name}" type="${type}" value="${esc(placeholder)}" placeholder="${esc(placeholder)}" required></div>`}
+    function renderForm(){const ep=ENDPOINTS[current];$('#formTitle').textContent=`${ep.method} ${ep.path}`;$('#apiForm').innerHTML=`${ep.fields.map(fieldMarkup).join('')}<div class="actions full"><button class="button primary" type="submit">Send Request</button><button class="button secondary" type="button" id="resetForm">Reset</button></div>`;$('#requestPreview').textContent=ep.fields.length?JSON.stringify(readForm(),null,2):'{\n  "request": "none"\n}';$('#responsePreview').textContent='Click “Send Request” to view the API response.';$('#responseCode').textContent='—';$('#resetForm').addEventListener('click',renderForm);}
+    function readForm(){const data={};new FormData($('#apiForm')).forEach((v,k)=>data[k]=v);return data}
+    function mockResponse(){const ep=ENDPOINTS[current], body=readForm();if(current==='health')return {code:200,data:{status:'ok',service:'cargocore-api',runtime:'C++',version:'1.0.0',database:'connected'}};if(current==='track'){const s=demoShipments[body.trackingNumber];return s?{code:200,data:{shipment:s,message:'Verified shipment record returned.'}}:{code:404,data:{error:'shipment_not_found',message:'No verified shipment exists for that tracking number.'}}}if(current==='status')return {code:200,data:{message:'Shipment status updated.',trackingNumber:body.trackingNumber,status:body.status,location:body.location,updatedAt:new Date().toISOString()}};return {code:201,data:{message:current==='quote'?'Quote request received. The logistics team will review your details.':'Request received successfully.',requestId:'req_'+crypto.randomUUID().slice(0,8),receivedAt:new Date().toISOString()}}}
+    function renderLogs(){if(!logs.length){$('#activityLog').innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center">No requests yet.</td></tr>';return}$('#activityLog').innerHTML=logs.map(l=>`<tr><td>${esc(l.time)}</td><td><span class="method ${l.method.toLowerCase()}">${l.method}</span></td><td><code>${esc(l.path)}</code></td><td class="http-code">${l.code}</td><td>${l.latency} ms</td></tr>`).join('')}
+    $('#apiForm').addEventListener('submit',e=>{e.preventDefault();const body=readForm(),ep=ENDPOINTS[current],started=performance.now();$('#requestPreview').textContent=JSON.stringify(body,null,2);const result=mockResponse();const latency=Math.round(performance.now()-started)+Math.floor(Math.random()*35)+8;$('#responseCode').textContent=`HTTP ${result.code}`;$('#responsePreview').textContent=JSON.stringify(result.data,null,2);logs.unshift({time:new Date().toLocaleTimeString(),method:ep.method,path:ep.path,code:result.code,latency});logs=logs.slice(0,12);localStorage.setItem('cargocore_api_logs',JSON.stringify(logs));renderLogs();$('#statusDot').classList.add('online');$('#serverStatus').textContent='Backend status: demo response';notify(result.code<400?'Request completed in demo mode.':'Request returned an error.',result.code<400?'success':'error')});
+    document.querySelectorAll('.endpoint').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.endpoint').forEach(x=>x.classList.remove('active'));button.classList.add('active');current=button.dataset.endpoint;renderForm()}));
+    $('#copyRequest').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#requestPreview').textContent);notify('Request JSON copied.')}catch{notify('Clipboard access is unavailable.','error')}});$('#clearLog').addEventListener('click',()=>{logs=[];localStorage.removeItem('cargocore_api_logs');renderLogs();notify('Activity log cleared.')});renderForm();renderLogs();
+  </script>
+</body>
+</html>

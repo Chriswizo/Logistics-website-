@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="C++ developer specification for a production logistics and shipping platform." />
+  <title>CargoCore | C++ Developer Specification</title>
+  <style>
+    :root{--navy:#102a43;--dark:#071a2b;--orange:#f97316;--bg:#f5f7fa;--card:#fff;--muted:#62758a;--border:#dbe4ee;--code:#0b1726;--green:#166534;--shadow:0 10px 28px rgba(16,42,67,.08)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--navy);background:var(--bg);font:16px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}a{color:var(--orange);text-decoration:none}a:hover{text-decoration:underline}
+    header{padding:4rem clamp(1rem,6vw,6rem);color:#fff;background:linear-gradient(125deg,var(--dark),var(--navy) 65%,#1f4b68)}.eyebrow{margin:0 0 .7rem;color:#fdba74;font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.brand{display:flex;gap:.8rem;align-items:center}.mark{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;color:#fff;background:var(--orange);font-weight:900}.brand h1{margin:0;font-size:clamp(1.9rem,4vw,3.4rem);letter-spacing:-.03em}.lead{max-width:850px;margin:1.1rem 0 0;color:#d7e5f3;font-size:1.1rem}.header-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.5rem}.tag{padding:.35rem .65rem;border:1px solid rgba(255,255,255,.25);border-radius:999px;color:#e4edf5;font-size:.78rem}
+    .page{display:grid;grid-template-columns:260px minmax(0,900px);gap:2rem;width:min(1220px,100%);margin:0 auto;padding:2rem clamp(1rem,4vw,2rem)}.toc{position:sticky;top:1rem;align-self:start;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}.toc strong{display:block;margin-bottom:.7rem}.toc a{display:block;padding:.28rem 0;color:var(--muted);font-size:.84rem}.toc a:hover{color:var(--orange)}main{min-width:0}.section{margin-bottom:1.3rem;padding:1.6rem;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}h2{margin:0 0 .8rem;font-size:1.55rem}h3{margin:1.2rem 0 .45rem;font-size:1.08rem}p{margin:.6rem 0}ul,ol{padding-left:1.35rem}.callout{margin:1rem 0;padding:1rem 1.1rem;border-left:4px solid var(--orange);background:#fff7ed}.warning{border-left-color:#dc2626;background:#fef2f2}.checklist{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;padding-left:0;list-style:none}.checklist li::before{content:"✓";margin-right:.45rem;color:var(--green);font-weight:900}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}.mini{padding:1rem;border:1px solid var(--border);border-radius:10px;background:#fbfdff}.mini h3{margin-top:0}.code{overflow:auto;padding:1rem 1.1rem;color:#d7e5f3;background:var(--code);border-radius:10px;font:.82rem/1.55 "SFMono-Regular",Consolas,monospace;white-space:pre}.route{display:grid;grid-template-columns:130px 1fr;gap:.6rem;padding:.55rem 0;border-bottom:1px solid var(--border)}.method{font-weight:900;color:var(--orange-dark,#c2410c)}table{width:100%;border-collapse:collapse}th,td{padding:.65rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--muted);font-size:.76rem;text-transform:uppercase}.small{color:var(--muted);font-size:.9rem}footer{padding:2rem;color:#b9c9d8;text-align:center;background:var(--dark);font-size:.82rem}
+    @media(max-width:850px){.page{grid-template-columns:1fr}.toc{position:static}.grid,.checklist{grid-template-columns:1fr}}@media(max-width:520px){header{padding:2.5rem 1rem}.page{padding:1rem}.section{padding:1.1rem}.route{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">Full-stack C++ implementation brief</p>
+    <div class="brand"><div class="mark">CC</div><h1>CargoCore Logistics Platform</h1></div>
+    <p class="lead">Build a complete, secure, responsive international logistics and shipping platform with a C++ backend, REST API, database integration, administrator dashboard, and customer-facing web interface.</p>
+    <div class="header-tags"><span class="tag">C++17 or newer</span><span class="tag">REST API</span><span class="tag">PostgreSQL</span><span class="tag">JWT authentication</span><span class="tag">Responsive frontend</span></div>
+  </header>
+
+  <div class="page">
+    <nav class="toc" aria-label="Table of contents"><strong>Contents</strong><a href="#goal">1. Product goal</a><a href="#stack">2. Architecture</a><a href="#brand">3. Brand and UI</a><a href="#routes">4. Routes and API</a><a href="#database">5. Database model</a><a href="#tracking">6. Tracking</a><a href="#forms">7. Forms</a><a href="#admin">8. Admin</a><a href="#security">9. Security</a><a href="#testing">10. Testing</a><a href="#acceptance">11. Acceptance criteria</a></nav>
+
+    <main>
+      <section class="section" id="goal"><h2>1. Product Goal</h2><p>Create an original logistics brand and a working website that helps customers learn about freight services, track verified shipments, request quotes, and contact support. Authorized staff must manage shipments, shipment events, quotes, inquiries, and editable website content.</p><div class="callout warning"><strong>Truthfulness requirement:</strong> Never fabricate shipment records, delivery updates, prices, customer identities, testimonials, certifications, offices, partnerships, carrier integrations, or GPS data. If an integration is not connected, label it as unavailable or planned.</div></section>
+
+      <section class="section" id="stack"><h2>2. Recommended Architecture</h2><div class="grid"><div class="mini"><h3>Backend</h3><ul><li>C++17 or C++20</li><li>REST framework such as Drogon, Crow, or oat++</li><li>PostgreSQL database</li><li>libpqxx or framework database layer</li><li>JSON serialization with nlohmann/json</li></ul></div><div class="mini"><h3>Frontend</h3><ul><li>React and TypeScript or server-rendered HTML</li><li>Tailwind CSS or a maintainable CSS system</li><li>Responsive customer and admin layouts</li><li>Accessible semantic HTML</li><li>Fetch-based API client</li></ul></div><div class="mini"><h3>Infrastructure</h3><ul><li>HTTPS reverse proxy</li><li>Environment-based configuration</li><li>Structured logs and health checks</li><li>Database migrations</li><li>CI build, test, and lint pipeline</li></ul></div><div class="mini"><h3>Application layers</h3><ul><li>Routes/controllers</li><li>Request validation</li><li>Services/use cases</li><li>Repositories/data access</li><li>Authentication and authorization middleware</li></ul></div></div><h3>Suggested C++ structure</h3><pre class="code">src/
+  main.cpp
+  config/
+  http/
+    routes.cpp
+    middleware/
+  controllers/
+  services/
+  repositories/
+  models/
+  validators/
+  auth/
+  utils/
+tests/
+migrations/
+public/
+  index.html
+  assets/
+CMakeLists.txt
+.env.example
+README.md</pre></section>
+
+      <section class="section" id="brand"><h2>3. Brand and Interface</h2><p>Use an original premium corporate identity called <strong>CargoCore</strong> or another editable name. Use navy blue, white, light gray, and orange accents. Use bold headings, readable body text, spacious layouts, professional logistics imagery, subtle transitions, clear CTAs, and mobile-first responsive behavior.</p><h3>Shared UI elements</h3><p>Implement a sticky header, mobile menu, logo, buttons, tracking form, service cards, shipment timeline, quote form, contact form, FAQ accordion, support widget, loading states, error states, empty states, success messages, admin layout, protected route, and a consistent footer.</p><h3>Required pages</h3><ul><li>Home</li><li>About Us</li><li>Services overview</li><li>Air Freight, Ocean Freight, Road Freight, Express Courier detail pages</li><li>Shipment Tracking</li><li>Request a Quote</li><li>Contact Us</li><li>FAQ</li><li>Privacy Policy</li><li>Terms and Conditions</li><li>Protected Admin Dashboard</li></ul></section>
+
+      <section class="section" id="routes"><h2>4. REST API Contract</h2><p>Return JSON responses with consistent fields such as <code>success</code>, <code>data</code>, <code>error</code>, and <code>requestId</code>. Validate all request bodies server-side.</p><div class="route"><span class="method">GET</span><span><strong>/api/health</strong><br><span class="small">Return service health and dependency status.</span></span></div><div class="route"><span class="method">GET</span><span><strong>/api/shipments/track?number=...</strong><br><span class="small">Return safe public fields for a verified shipment only.</span></span></div><div class="route"><span class="method">POST</span><span><strong>/api/quotes</strong><br><span class="small">Validate and save a quote request.</span></span></div><div class="route"><span class="method">POST</span><span><strong>/api/contact</strong><br><span class="small">Validate and save a contact inquiry.</span></span></div><div class="route"><span class="method">POST</span><span><strong>/api/auth/login</strong><br><span class="small">Authenticate authorized staff and issue a secure session or short-lived token.</span></span></div><div class="route"><span class="method">POST</span><span><strong>/api/admin/shipments</strong><br><span class="small">Create a shipment for authorized staff.</span></span></div><div class="route"><span class="method">PUT</span><span><strong>/api/admin/shipments/:id/status</strong><br><span class="small">Update status and create a tracking event.</span></span></div><div class="route"><span class="method">GET</span><span><strong>/api/admin/quotes, /api/admin/inquiries</strong><br><span class="small">Return protected operational records for staff.</span></span></div><h3>Example public tracking response</h3><pre class="code">{
+  "success": true,
+  "data": {
+    "trackingNumber": "CC-2026-0001",
+    "status": "in_transit",
+    "origin": "Chicago, USA",
+    "destination": "Toronto, Canada",
+    "estimatedDelivery": "2026-10-20",
+    "currentLocation": "Detroit Facility",
+    "shippingMethod": "Road Freight",
+    "events": []
+  },
+  "requestId": "req_abc123"
+}</pre></section>
+
+      <section class="section" id="database"><h2>5. Database Model</h2><p>Use UUID primary keys, timestamps, foreign keys, indexes, check constraints, and migration files. Never use tracking numbers as the primary key.</p><table><thead><tr><th>Table</th><th>Required data</th></tr></thead><tbody><tr><td><strong>users</strong></td><td>Authentication identity, full name, role, active status, timestamps.</td></tr><tr><td><strong>shipments</strong></td><td>Unique tracking number, status, sender/recipient, origin/destination, dates, location, package data, shipping method.</td></tr><tr><td><strong>shipment_events</strong></td><td>Shipment ID, stage, location, notes, event timestamp, staff author.</td></tr><tr><td><strong>quote_requests</strong></td><td>Customer contact, pickup, destination, type, weight, dimensions, package count, method, pickup date, handling flags, status, staff response.</td></tr><tr><td><strong>contact_inquiries</strong></td><td>Contact details, subject, message, status, staff response, assigned user, timestamps.</td></tr><tr><td><strong>services</strong></td><td>Editable slug, title, description, benefits, image, active state, sort order.</td></tr><tr><td><strong>faqs</strong></td><td>Question, answer, category, active state, sort order.</td></tr><tr><td><strong>testimonials</strong></td><td>Authorized quote, consented name/company, approval status, display status.</td></tr><tr><td><strong>site_settings</strong></td><td>Company name, logo, description, email, phone, address, hours, social links, mission, vision.</td></tr></tbody></table></section>
+
+      <section class="section" id="tracking"><h2>6. Shipment Tracking Rules</h2><ol><li>Accept a tracking number and normalize safe whitespace/case.</li><li>Query only verified shipment records.</li><li>Return a safe not-found response without revealing whether private records exist.</li><li>Expose only public fields; mask or omit private addresses, phone numbers, email addresses, and internal notes.</li><li>Display the seven stages: Registered, Picked Up, Processing, In Transit, Arrived, Out for Delivery, Delivered.</li><li>Show completed, current, and upcoming stages separately.</li><li>Do not claim live GPS or real-time updates without a connected carrier/GPS provider.</li></ol></section>
+
+      <section class="section" id="forms"><h2>7. Customer Forms</h2><h3>Quote request</h3><p>Collect full name, email, phone, optional company, pickup, destination, shipment type, weight, dimensions, package count, shipping method, pickup date, instructions, special handling, and fragile cargo. Validate in the frontend and again in the C++ API. Save the request and tell the customer the team will review the details. Do not show an invented price.</p><h3>Contact inquiry</h3><p>Collect full name, email, optional phone, subject, and message. Save securely, return a confirmation, and show editable company contact information. If live chat is not integrated, provide a contact form instead of claiming an agent is available.</p></section>
+
+      <section class="section" id="admin"><h2>8. Administration</h2><p>Protect the admin dashboard with authentication and role-based permissions. Implement separate permissions for staff and administrators.</p><div class="grid"><div class="mini"><h3>Shipment management</h3><ul><li>Create records and unique tracking numbers</li><li>Edit shipment data</li><li>Update status</li><li>Add timestamped location events</li><li>Set ETA and mark delivered</li></ul></div><div class="mini"><h3>Content management</h3><ul><li>Edit company information</li><li>Manage services and FAQs</li><li>Manage approved testimonials</li><li>Update contact details and hours</li></ul></div><div class="mini"><h3>Quote management</h3><ul><li>View and filter requests</li><li>Update status</li><li>Record quoted price</li><li>Respond to customer inquiries</li></ul></div><div class="mini"><h3>Inquiry management</h3><ul><li>View contact messages</li><li>Assign and update status</li><li>Record staff responses</li><li>Keep audit timestamps</li></ul></div></div></section>
+
+      <section class="section" id="security"><h2>9. Security and Privacy</h2><ul><li>Use HTTPS in production.</li><li>Store secrets only in environment variables or a secrets manager.</li><li>Hash passwords with Argon2id or bcrypt; never store plaintext passwords.</li><li>Use short-lived access tokens and refresh-token rotation, or secure HttpOnly cookies.</li><li>Validate and length-limit every request field.</li><li>Use parameterized SQL queries.</li><li>Apply CORS allowlists, rate limits, request-size limits, and security headers.</li><li>Log security-relevant events without logging passwords, tokens, or private customer data.</li><li>Return generic errors to clients and detailed errors only to protected logs.</li><li>Apply least privilege to database roles and admin actions.</li></ul><div class="callout"><strong>Public data boundary:</strong> Prefer a dedicated SQL view or server-side response mapper for public tracking. This prevents private columns from being accidentally serialized into the browser response.</div></section>
+
+      <section class="section" id="testing"><h2>10. Testing and Operations</h2><div class="checklist"><li>Unit tests for validators and status transitions</li><li>Repository tests against a test database</li><li>API tests for success and error cases</li><li>Authorization tests for every admin route</li><li>Not-found tracking tests</li><li>Input-size and malformed-JSON tests</li><li>Frontend responsive smoke tests</li><li>Accessibility keyboard and label checks</li><li>Migration and rollback tests</li><li>Health endpoint and dependency checks</li></div><h3>Build requirements</h3><pre class="code">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure</pre></section>
+
+      <section class="section" id="acceptance"><h2>11. Acceptance Criteria</h2><p>The project is complete when:</p><ul><li>All required customer and admin routes work.</li><li>The UI is responsive on mobile, tablet, and desktop.</li><li>Tracking queries real database records and never fabricates updates.</li><li>Public tracking responses protect private customer data.</li><li>Quote and contact forms validate and persist submissions.</li><li>Authorized staff can create and update shipments.</li><li>Status changes create timestamped shipment events.</li><li>Authentication and role-based access are enforced server-side.</li><li>RLS or equivalent database permissions are configured.</li><li>Services, FAQs, testimonials, and contact settings are editable.</li><li>Loading, empty, success, error, and not-found states are implemented.</li><li>SEO metadata, sitemap, robots.txt, semantic HTML, and accessibility basics are present.</li><li>The app has no hardcoded credentials or sensitive data in frontend code.</li><li>README documentation explains setup, environment variables, migrations, seed data, testing, and deployment.</li></ul><div class="callout"><strong>Recommended implementation order:</strong> Set up the C++ project and design system, implement migrations and repositories, add public tracking and forms, add authentication and admin routes, then finish content management, testing, accessibility, and deployment documentation.</div></section>
+    </main>
+  </div>
+  <footer>CargoCore C++ Developer Specification &middot; Original logistics platform brief</footer>
+</body>
+</html>
